@@ -3,7 +3,7 @@
 import { FC, useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { HiPaperAirplane } from "react-icons/hi";
-import Image from "next/image"; 
+import Image from "next/image";
 import { TbH3 } from "react-icons/tb";
 
 const Home: FC = () => {
@@ -14,15 +14,15 @@ const Home: FC = () => {
         { text: "Hello! How can I help you today?", sender: 'bot' },
     ]);
     const [inputText, setInputText] = useState("");
-    const heroRef = useRef<HTMLDivElement>(null); 
-    const chatRef = useRef<HTMLDivElement>(null); 
-    const descriptionRef = useRef<HTMLDivElement>(null); 
+    const heroRef = useRef<HTMLDivElement>(null);
+    const chatRef = useRef<HTMLDivElement>(null);
+    const descriptionRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (heroRef.current) {
             gsap.fromTo(heroRef.current,
-                { x: -100 }, 
-                { x: 0, duration: 1.5, ease: "power3.out" } 
+                { x: -100 },
+                { x: 0, duration: 1.5, ease: "power3.out" }
             );
         }
     }, []);
@@ -34,7 +34,7 @@ const Home: FC = () => {
                 { opacity: 1, x: 0, duration: 1.2, ease: "power3.out" }
             );
         }
-    }, [messages]); 
+    }, [messages]);
 
     const handleSendMessage = async () => {
         if (inputText.trim()) {
@@ -42,7 +42,7 @@ const Home: FC = () => {
             setInputText("");
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/chat_gen', {
+                const response = await fetch('http://127.0.0.1:8000/chat_gen', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -75,9 +75,9 @@ const Home: FC = () => {
                 </div>
 
                 <div className="fixed right-8 bottom-8 w-[420px] h-[calc(100%-6rem-30px)] rounded-lg p-6 flex flex-col bg-black bg-opacity-90 backdrop-blur-lg border border-blue-600 shadow-lg"
-                     style={{
-                         boxShadow: '0 0 20px rgba(0, 0, 255, 0.8), 0 0 30px rgba(0, 128, 255, 0.6), 0 0 40px rgba(0, 0, 255, 0.4)',
-                     }}>
+                    style={{
+                        boxShadow: '0 0 20px rgba(0, 0, 255, 0.8), 0 0 30px rgba(0, 128, 255, 0.6), 0 0 40px rgba(0, 0, 255, 0.4)',
+                    }}>
                     <h2 className="text-xl font-bold text-white mb-4">Ask:</h2>
                     <div ref={chatRef} className="flex-grow overflow-y-auto bg-white/10 p-4 rounded-lg mb-4 backdrop-blur-md border border-blue-600">
                         {messages.map((msg, index) => (
@@ -93,6 +93,11 @@ const Home: FC = () => {
                             type="text"
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSendMessage();
+                                }
+                            }}
                             className="flex-grow p-3 border rounded-lg bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-shadow duration-200"
                             placeholder="Type your message..."
                         />
